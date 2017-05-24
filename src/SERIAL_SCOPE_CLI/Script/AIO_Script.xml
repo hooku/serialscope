@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<AIO_SCRIPT>
+  <CONFIG port="COM8" def="baud=115200 parity=N data=8 stop=1" />
+  <MSGs watch="wait_for_init">
+    <MSG id="MSG_CONN" />
+    <MSG id="MSG_INIT" timeout="1000" retry="infinite" retrydelay="5000" wait="wait_for_init" />
+    <MSG id="MSG_SCAN" onerror="END" >
+      <channel>6</channel>
+      <ssid>
+        <length>10</length>
+        <Array>China-Net</Array>  
+      </ssid>
+    </MSG>
+    <MSG id="MSG_CONN" onerror="END">
+      <index>1</index>
+      <ssid>
+        <Mode>0</Mode>
+        <channel>6</channel>
+        <bssid>0A:33:55:A3:66:43</bssid>
+      </ssid>
+    </MSG>
+    <MSG id="MSG_DHCP" timeout="1000" watch="connection_change">
+      <type>0</type><!-- get new DHCP setting -->
+      <mode>0</mode><!-- DHCP off -->
+    </MSG>
+    <MSG id="MSG_DSCT" />
+    <MSG id="!RAW" retry="5">
+      <![CDATA[
+      55 AA 22 6A C5 B5 A5 64 44 22 31 56 75 21 74 37
+      ]]>
+    </MSG>
+  </MSGs>
+  <EVENTs>
+    <EVENT id="wait_for_init">
+      <IND id="IND_INIT">
+        <END />
+      </IND>
+    </EVENT>
+    <EVENT id="connection_change">
+      <IND id="IND_CONN">
+        <STATE id="4">
+          <RESTART />
+        </STATE>
+        <STATE id="5">
+          <END />
+        </STATE>
+      </IND>
+    </EVENT>
+  </EVENTs>
+</AIO_SCRIPT>
